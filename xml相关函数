@@ -1,0 +1,42 @@
+//4. 解析xml字符串  
+xmlDocPtr doc = xmlParseMemory(pXml, length);  
+   
+//根据xmldoc获得xml的根节点  
+xmlNodePtr cur = xmlDocGetRootElement(doc);  
+   
+//获得子节点:->children获得不是第一个子节点，必须用next才能获得第一个子节点  
+cur = cur->children;  
+cur = cur->next;  
+  
+// 获得节点信息中的内容: 注意释放资源  
+xmlChar* key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);  
+xmlFree(key);  
+  
+//获得节点信息属性的值：属性name，注意释放资源  
+xmlChar* fversion = xmlGetProp(cur, "version");  
+xmlFree(fversion);  
+  
+  
+  
+//根节点相关函数  
+xmlNodePtr xmlDocGetRootElement (xmlDocPtr doc) //获取文档根节点  
+xmlNodePtr xmlDocSetRootElement (xmlDocPtr doc, xmlNodePtr root) //设置文档根节点  
+  
+//创建子节点相关函数  
+xmlNodePtr xmlNewNode (xmlNsPtr ns, const xmlChar * name) //创建新节点  
+xmlNodePtr xmlNewChild (xmlNodePtr parent, xmlNsPtr ns, const xmlChar * name, const xmlChar * content) //创建新的子节点  
+xmlNodePtr xmlCopyNode (const xmlNodePtr node, int extended) //复制当前节点  
+  
+//添加子节点相关函数  
+xmlNodePtr xmlAddChild (xmlNodePtr parent, xmlNodePtr cur) //给指定节点添加子节点  
+xmlNodePtr xmlAddNextSibling (xmlNodePtr cur, xmlNodePtr elem) //添加后一个兄弟节点  
+xmlNodePtr xmlAddPrevSibling (xmlNodePtr cur, xmlNodePtr elem) //添加前一个兄弟节点  
+xmlNodePtr xmlAddSibling (xmlNodePtr cur, xmlNodePtr elem) //添加兄弟节点  
+  
+//属性相关函数  
+xmlAttrPtr    xmlNewProp (xmlNodePtr node, const xmlChar * name, const xmlChar * value) //创建新节点属性  
+xmlChar *    xmlGetProp (xmlNodePtr node, const xmlChar * name) //读取节点属性  
+xmlAttrPtr    xmlSetProp (xmlNodePtr node, const xmlChar * name, const xmlChar * value) //设置节点属性  
+  
+=xmlNodeListGetstring(doc, cur->xmlChildrenNode, 1);  
+=xmlNodeContent(cur);  
