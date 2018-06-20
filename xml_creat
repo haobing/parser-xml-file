@@ -1,0 +1,52 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<libxml/parser.h>
+#include<libxml/tree.h>
+int main(int argc,char **argv)
+{
+	xmlDocPtr doc=NULL;
+	xmlNodePtr root_node=NULL,pnode=NULL,pnode1=NULL;
+	
+	//创建文档指针
+	doc=xmlNewDoc((xmlChar *)"1.0");
+	
+	//创建节点指针
+	root_node=xmlNewNode(NULL,(xmlChar* )"root");
+	
+	//设置节点root_node的属性
+	xmlNewProp(root_node,(xmlChar *)"TYPE",(xmlChar *)"1.0");
+	
+	//设置文档根节点
+	xmlDocSetRootElement(doc,root_node);
+	
+	//创建节点pnode
+	pnode=xmlNewNode(NULL,(xmlChar*)"children1");
+	
+	//创建pnode的子节点child_child1
+	xmlNewChild(pnode,NULL,(xmlChar *)"child_child1",(xmlChar *)"hah");
+	
+	//将pnode节点作为root_node的子节点
+	xmlAddChild(root_node,pnode);
+	
+	//创建节点pnode1
+	pnode1=xmlNewNode(NULL,(xmlChar*)"child_child2");
+	
+	//将pnode1作为pnode的子节点
+	xmlAddChild(pnode,pnode1);
+	
+	//给节点pnode1加内容
+	xmlAddChild(pnode1,xmlNewText((xmlChar*)"this is the laster node,node n"));
+	
+	//创建root_node的子节点
+	xmlNewTextChild(root_node,NULL,(xmlChar*)"children2",(xmlChar*)"the content of children2");
+	xmlNewTextChild(root_node,NULL,(xmlChar*)"children3",(xmlChar*)"the content of chldren3");
+	
+	//保存xml对象为文件
+	xmlSaveFormatFileEnc(argc>1?argv[1]:"-",doc,"UTF-8",1);
+	//释放xml对象
+	xmlFreeDoc(doc);
+	//清理
+	xmlCleanupParser();
+	xmlMemoryDump();
+	return 0;
+}
