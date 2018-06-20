@@ -1,0 +1,77 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<libxml/parser.h>
+int main(int argc,char **argv)
+{
+	xmlDocPtr doc;
+	xmlNodePtr curNode;
+	
+	char *szDocName;
+	if(argc<=1){
+		printf("usage:%s document\n",argv[0]);
+		exit(1);
+	}
+	
+	szDocName=argv[1];
+	xmlKeepBlanksDefault(0);
+	 
+	//读取xml文档
+	doc=xmlReadFile(szDocName,"UTF-8",XML_PARSE_RECOVER);
+	
+	if(NULL==doc){
+		fprintf(stderr,"document not parsed succefffuly\n");
+		exit(1);
+	}
+	
+	//从xml文档中获取根节点
+	curNode=xmlDocGetRootElement(doc);
+	
+	if(NULL==curNode){
+		fprintf(stderr,"empty documen\n");
+		xmlFreeDoc(doc);
+		exit(1);
+	}
+	
+	//得到子节点
+	curNode=curNode->children;
+	
+	while(curNode!=NULL){
+		//删除节点
+		if(!xmlStrcmp(curNode->name,(xmlChar *)"children1")){
+			xmlNodePtr tempNode;
+			tempNode=curNode->next;
+			xmlUnlinkNode(curNode);
+			xmlFreeNode(curNode);
+			curNode=tempNode;
+			continue;
+		}
+		
+		//改变节点内容
+		if(!xmlStrcmp(curNode->name,(xmlChar *)"children2")){
+			xmlNodeSetContent(curNode,(xmlChar *)"the content changed");
+		}
+		
+		//增加节点属性
+		if(!xmlStrcmp(curNode->name,(xmlChar *)"children3")){
+			xmlNewProp(curNode,(xmlChar *)"new type",(xmlChar *)"have");
+		}
+		
+		//给节点增加子节点
+		if(!xmlStrcmp(curNode->name,(xmlChar *)"children3")){
+			xmlNewTextChild(curNode,NULL,(xmlChar *)"new child_child",(xmlChar*)"new content");
+		}
+		
+		//遍历同胞节点
+		curNode=curNode->next;
+	}
+	
+	//保存文档
+	xmlSaveFormatFileEnc(szDocName,doc,"UTF-8",1);
+	xmlFreeDoc(doc);
+	xmlCleanupParser();
+	xmlMemoryDump();
+	return 0;
+}
+	
+	
+	
